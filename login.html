@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Budget Car Finder</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="login">
+
+  <div class="auth-page">
+    <div class="auth-card">
+      <h1>Budget Car Finder</h1>
+      <p class="subtitle">Sign in to your account</p>
+
+      <!-- Alert box for errors/success (shown by JavaScript) -->
+      <div id="loginAlert" class="alert" role="alert"></div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required placeholder="you@email.com" autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required placeholder="Enter password" autocomplete="current-password">
+        </div>
+
+        <div class="form-row">
+          <label class="remember-me">
+            <input type="checkbox" id="remember" name="remember">
+            Remember me
+          </label>
+          <a href="#" class="forgot-link" id="forgotPassword">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
+
+      <p class="auth-footer">
+        Don't have an account? <a href="register.html">Register here</a>
+      </p>
+      <a href="index.html" class="back-home">← Back to Home</a>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
