@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Budget Car Finder | Find Your Dream Car</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="home">
+
+  <!-- ========== HEADER / NAVIGATION ========== -->
+  <header class="header">
+    <nav class="nav">
+      <a href="#home" class="logo">Budget Car Finder</a>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#find-cars">Find Cars</a></li>
+        <li><a href="#popular">Popular Cars</a></li>
+        <li><a href="#favorites">Favorites</a></li>
+        <li><a href="#contact">Contact</a></li>
+
+        <!-- Shown when user is NOT logged in -->
+        <li class="nav-auth" id="navAuth">
+          <a href="login.html" class="btn btn-outline">Login</a>
+          <a href="register.html" class="btn btn-primary">Register</a>
+        </li>
+
+        <!-- Shown when user IS logged in -->
+        <li class="user-bar" id="userBar">
+          <span class="welcome-text" id="welcomeText">Welcome, User</span>
+          <button type="button" class="btn-logout" id="logoutBtn">Logout</button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ========== HERO SECTION ========== -->
+  <section class="hero" id="home">
+    <div class="hero-content container">
+      <h1>Find Your Dream Car Within Your Budget</h1>
+      <p>Discover and compare cars that fit your budget and preferences</p>
+      <a href="#find-cars" class="btn btn-primary">Find Cars</a>
+    </div>
+  </section>
+
+  <!-- ========== SEARCH & FILTERS ========== -->
+  <section class="filters-section" id="find-cars">
+    <div class="container">
+      <h2 class="section-title">Search & Filter Cars</h2>
+      <p class="section-subtitle">Select your budget range and preferred fuel type to find the perfect match</p>
+
+      <div class="filters-box">
+        <h3>Filter by Budget</h3>
+        <div class="filter-group">
+          <div class="filter-options">
+            <button type="button" class="filter-chip active" data-filter="budget" data-value="all">All Budgets</button>
+            <button type="button" class="filter-chip" data-filter="budget" data-value="under-5">Under ₹5 Lakhs</button>
+            <button type="button" class="filter-chip" data-filter="budget" data-value="5-10">₹5–10 Lakhs</button>
+            <button type="button" class="filter-chip" data-filter="budget" data-value="10-20">₹10–20 Lakhs</button>
+            <button type="button" class="filter-chip" data-filter="budget" data-value="20-50">₹20–50 Lakhs</button>
+            <button type="button" class="filter-chip" data-filter="budget" data-value="above-50">Above ₹50 Lakhs</button>
+          </div>
+        </div>
+
+        <h3>Filter by Fuel Type</h3>
+        <div class="filter-group">
+          <div class="filter-options">
+            <button type="button" class="filter-chip active" data-filter="fuel" data-value="all">All Fuels</button>
+            <button type="button" class="filter-chip" data-filter="fuel" data-value="Petrol">Petrol</button>
+            <button type="button" class="filter-chip" data-filter="fuel" data-value="Diesel">Diesel</button>
+            <button type="button" class="filter-chip" data-filter="fuel" data-value="Electric">Electric</button>
+            <button type="button" class="filter-chip" data-filter="fuel" data-value="Hybrid">Hybrid</button>
+          </div>
+        </div>
+
+        <div class="filter-actions">
+          <button type="button" class="btn btn-primary" id="applyFilters">Apply Filters</button>
+          <button type="button" class="btn btn-outline" id="resetFilters">Reset Filters</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CAR LISTINGS ========== -->
+  <section class="cars-section">
+    <div class="container">
+      <h2 class="section-title">Available Cars</h2>
+      <p class="section-subtitle">Browse 20+ popular cars with detailed specs and prices</p>
+      <!-- Car cards are inserted here by JavaScript -->
+      <div class="cars-grid" id="carsGrid"></div>
+    </div>
+  </section>
+
+  <!-- ========== POPULAR CARS ========== -->
+  <section class="popular-section" id="popular">
+    <div class="container">
+      <h2 class="section-title">Popular Cars</h2>
+      <p class="section-subtitle">Top picks loved by thousands of buyers across India</p>
+      <div class="popular-grid" id="popularGrid"></div>
+    </div>
+  </section>
+
+  <!-- ========== FAVORITES ========== -->
+  <section class="favorites-section" id="favorites">
+    <div class="container">
+      <h2 class="section-title">Your Favorites</h2>
+      <p class="section-subtitle">Cars you have saved — click the heart icon on any car to add here</p>
+      <p class="no-results" id="favoritesEmpty" style="display:none;">No favorites yet. Browse cars and click "Add to Favorites".</p>
+      <div class="cars-grid" id="favoritesGrid"></div>
+    </div>
+  </section>
+
+  <!-- ========== TESTIMONIALS ========== -->
+  <section class="testimonials-section">
+    <div class="container">
+      <h2 class="section-title">What Our Users Say</h2>
+      <p class="section-subtitle">Real stories from happy car buyers who found their perfect ride</p>
+
+      <div class="testimonials-grid">
+        <article class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p>"Budget Car Finder helped me compare the Creta and Seltos side by side. I saved weeks of showroom visits!"</p>
+          <p class="author">Rahul Sharma</p>
+          <p class="role">Software Engineer, Bangalore</p>
+        </article>
+        <article class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p>"The budget filters are spot on. I found my Swift within ₹8 lakhs in minutes. Highly recommend for first-time buyers."</p>
+          <p class="author">Priya Menon</p>
+          <p class="role">Teacher, Kochi</p>
+        </article>
+        <article class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p>"Clean UI and easy favorites list. I shared my shortlisted Nexon EV with family before booking the test drive."</p>
+          <p class="author">Amit Patel</p>
+          <p class="role">Business Owner, Ahmedabad</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== CONTACT ========== -->
+  <section class="contact-section" id="contact">
+    <div class="container">
+      <h2 class="section-title">Contact Us</h2>
+      <p class="section-subtitle">Have questions? Reach out and our team will get back to you</p>
+
+      <div class="contact-wrapper">
+        <div class="contact-info">
+          <h3>Get in Touch</h3>
+          <p>We are here to help you find the right car at the right price. Send us a message anytime.</p>
+          <ul class="contact-details">
+            <li>📧 support@budgetcarfinder.com</li>
+            <li>📞 +91 98765 43210</li>
+            <li>📍 Mumbai, Maharashtra, India</li>
+            <li>🕐 Mon–Sat, 9:00 AM – 7:00 PM</li>
+          </ul>
+        </div>
+
+        <form class="contact-form" id="contactForm">
+          <div class="form-group">
+            <label for="contactName">Your Name</label>
+            <input type="text" id="contactName" name="name" required placeholder="Enter your name">
+          </div>
+          <div class="form-group">
+            <label for="contactEmail">Email</label>
+            <input type="email" id="contactEmail" name="email" required placeholder="you@email.com">
+          </div>
+          <div class="form-group">
+            <label for="contactSubject">Subject</label>
+            <input type="text" id="contactSubject" name="subject" required placeholder="How can we help?">
+          </div>
+          <div class="form-group">
+            <label for="contactMessage">Message</label>
+            <textarea id="contactMessage" name="message" required placeholder="Write your message..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4>Budget Car Finder</h4>
+          <p>Your trusted partner to discover and compare cars within your budget across India.</p>
+          <div class="social-links">
+            <a href="#" aria-label="Facebook">f</a>
+            <a href="#" aria-label="Twitter">𝕏</a>
+            <a href="#" aria-label="Instagram">📷</a>
+            <a href="#" aria-label="LinkedIn">in</a>
+          </div>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <a href="#home">Home</a>
+          <a href="#find-cars">Find Cars</a>
+          <a href="#popular">Popular Cars</a>
+          <a href="#favorites">Favorites</a>
+        </div>
+        <div>
+          <h4>Account</h4>
+          <a href="login.html">Login</a>
+          <a href="register.html">Register</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <div>
+          <h4>Legal</h4>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Disclaimer</a>
+        </div>
+      </div>
+      <p class="footer-bottom">&copy; 2026 Budget Car Finder. College Mini Project — HTML, CSS & JavaScript.</p>
+    </div>
+  </footer>
+
+  <!-- ========== CAR DETAILS MODAL ========== -->
+  <div class="modal-overlay" id="carModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Car Details</h3>
+        <button type="button" class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img id="modalImage" src="" alt="Car">
+        <p><strong>Price:</strong> <span id="modalPrice"></span></p>
+        <p><strong>Fuel:</strong> <span id="modalFuel"></span></p>
+        <p><strong>Mileage:</strong> <span id="modalMileage"></span></p>
+        <p id="modalDesc"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
