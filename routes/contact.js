@@ -1,13 +1,13 @@
 /**
- * Contact form route - saves messages to database
+ * Contact form route (MongoDB)
  */
 const express = require('express');
-const { db } = require('../database/db');
+const ContactMessage = require('../models/ContactMessage');
 
 const router = express.Router();
 
 // POST /api/contact
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { name, email, subject, message } = req.body;
 
@@ -15,10 +15,12 @@ router.post('/', (req, res) => {
       return res.status(400).json({ success: false, message: 'All fields are required.' });
     }
 
-    db.prepare(`
-      INSERT INTO contact_messages (name, email, subject, message)
-      VALUES (?, ?, ?, ?)
-    `).run(name.trim(), email.trim().toLowerCase(), subject.trim(), message.trim());
+    await ContactMessage.create({
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      subject: subject.trim(),
+      message: message.trim()
+    });
 
     res.status(201).json({
       success: true,

@@ -1,6 +1,6 @@
 /* ============================================
    Budget Car Finder - Frontend JavaScript
-   Connects to Node.js + SQLite backend API
+   Connects to Node.js + MongoDB Atlas backend API
    ============================================ */
 
 // API base URL (same server when using npm start)
@@ -112,7 +112,7 @@ async function loadFavorites() {
 }
 
 function isFavorite(carId) {
-  return favoriteIds.includes(carId);
+  return favoriteIds.includes(String(carId));
 }
 
 /* ============================================
@@ -343,6 +343,8 @@ function initFilters() {
 }
 
 async function toggleFavorite(carId) {
+  carId = String(carId);
+
   if (!getToken()) {
     alert('Please log in to save favorites.');
     window.location.href = 'login.html';
@@ -367,8 +369,8 @@ async function toggleFavorite(carId) {
 function attachCarEventListeners() {
   document.querySelectorAll('.btn-details').forEach(function (btn) {
     btn.addEventListener('click', function () {
-      const id = parseInt(btn.dataset.id, 10);
-      const car = carsData.find(function (c) { return c.id === id; });
+      const id = btn.dataset.id;
+      const car = carsData.find(function (c) { return String(c.id) === id; });
       if (car) showCarModal(car);
     });
   });
@@ -423,8 +425,8 @@ function renderPopularCars() {
 
   grid.querySelectorAll('.popular-card').forEach(function (card) {
     card.addEventListener('click', function () {
-      const id = parseInt(card.dataset.carId, 10);
-      const car = carsData.find(function (c) { return c.id === id; });
+      const id = card.dataset.carId;
+      const car = carsData.find(function (c) { return String(c.id) === id; });
       if (car) {
         document.getElementById('find-cars').scrollIntoView({ behavior: 'smooth' });
         showCarModal(car);
@@ -447,7 +449,7 @@ function renderFavorites() {
     return;
   }
 
-  const favCars = carsData.filter(function (c) { return favoriteIds.includes(c.id); });
+  const favCars = carsData.filter(function (c) { return favoriteIds.includes(String(c.id)); });
 
   if (favCars.length === 0) {
     grid.innerHTML = '';

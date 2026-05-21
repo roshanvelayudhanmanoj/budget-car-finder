@@ -1,6 +1,6 @@
 # Budget Car Finder
 
-A full-stack car discovery web app — find and compare cars by budget and fuel type. Built as a college mini project with HTML, CSS, JavaScript, Node.js, Express, and SQLite.
+A full-stack car discovery web app — find and compare cars by budget and fuel type. Built as a college mini project with HTML, CSS, JavaScript, Node.js, Express, and MongoDB Atlas.
 
 ## Features
 
@@ -15,6 +15,7 @@ A full-stack car discovery web app — find and compare cars by budget and fuel 
 ```bash
 npm install
 copy .env.example .env
+# Add your MONGODB_URI to .env
 npm start
 ```
 
@@ -24,7 +25,16 @@ Open **http://localhost:3000**
 
 - **Frontend:** HTML, CSS, JavaScript
 - **Backend:** Node.js, Express
-- **Database:** SQLite (`database/bcf.db`)
+- **Database:** MongoDB Atlas (`budget_car_finder`)
+
+## Deploying to Render
+
+This app is ready for Render deployment with a Node web service.
+
+- Render will use `npm install` and `npm start`.
+- Use `render.yaml` in the repo to configure the web service.
+- Add `MONGODB_URI` as an environment variable in Render dashboard.
+- Render automatically provides the correct `PORT` value, and the server uses `process.env.PORT`.
 
 ## Project structure
 
@@ -32,7 +42,8 @@ Open **http://localhost:3000**
 ├── index.html, login.html, register.html
 ├── style.css, script.js
 ├── server.js
-├── database/       # SQLite + seed data
+├── database/       # MongoDB connection + seed
+├── models/         # Mongoose schemas (users, cars, favorites)
 ├── routes/         # API routes
 └── middleware/     # JWT auth
 ```

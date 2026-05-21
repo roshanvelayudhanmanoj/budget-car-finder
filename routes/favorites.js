@@ -1,58 +1,53 @@
 /**
- * User favorites routes (requires login)
+ * User favorites routes (MongoDB, requires login)
  */
 const express = require('express');
-const { db } = require('../database/db');
+const mongoose = require('mongoose');
+const Favorite = require('../models/Favorite');
+const Car = require('../models/Car');
 const { authMiddleware } = require('../middleware/auth');
+const { formatCar, isValidObjectId } = require('../utils/carHelpers');
 
 const router = express.Router();
 
-function formatCar(row) {
-  return {
-    id: row.id,
-    name: row.name,
-    price: row.price,
-    priceDisplay: row.price_display,
-    fuel: row.fuel,
-    mileage: row.mileage,
-    description: row.description,
-    image: row.image,
-    popular: row.popular === 1
-  };
-}
-
 router.use(authMiddleware);
 
-// GET /api/favorites - list user's favorite cars
-router.get('/', (req, res) => {
+// GET /api/favorites
+router.get('/', async (req, res) => {
   try {
-    const rows = db.prepare(`
-      SELECT c.* FROM cars c
-      INNER JOIN favorites f ON f.car_id = c.id
-      WHERE f.user_id = ?
-      ORDER BY f.created_at DESC
-    `).all(req.user.id);
+    const userId = new mongoose.Types.ObjectId(req.user.id);
+    const favorites = await Favorite.find({ userId }).sort({ createdAt: -1 });
 
-    const ids = rows.map((r) => r.id);
-    res.json({ success: true, favoriteIds: ids, cars: rows.map(formatCar) });
+    const carIds = favorites.map((f) => f.carId);
+    const cars = await Car.find({ _id: { $in: carIds } }).sort({ price: 1 });
+
+    res.json({
+      success: true,
+      favoriteIds: carIds.map((id) => id.toString()),
+      cars: cars.map(formatCar)
+    });
   } catch (err) {
     console.error('Favorites list error:', err);
     res.status(500).json({ success: false, message: 'Failed to load favorites.' });
   }
 });
 
-// POST /api/favorites/:carId - add favorite
-router.post('/:carId', (req, res) => {
+// POST /api/favorites/:carId
+router.post('/:carId', async (req, res) => {
   try {
-    const carId = parseInt(req.params.carId, 10);
-    const car = db.prepare('SELECT id FROM cars WHERE id = ?').get(carId);
+    if (!isValidObjectId(req.params.carId)) {
+      return res.status(400).json({ success: false, message: 'Invalid car id.' });
+    }
+
+    const car = await Car.findById(req.params.carId);
     if (!car) {
       return res.status(404).json({ success: false, message: 'Car not found.' });
     }
 
-    db.prepare('INSERT OR IGNORE INTO favorites (user_id, car_id) VALUES (?, ?)').run(
-      req.user.id,
-      carId
+    await Favorite.findOneAndUpdate(
+      { userId: req.user.id, carId: req.params.carId },
+      { userId: req.user.id, carId: req.params.carId },
+      { upsert: true, new: true }
     );
 
     res.json({ success: true, message: 'Added to favorites.' });
@@ -62,14 +57,14 @@ router.post('/:carId', (req, res) => {
   }
 });
 
-// DELETE /api/favorites/:carId - remove favorite
-router.delete('/:carId', (req, res) => {
+// DELETE /api/favorites/:carId
+router.delete('/:carId', async (req, res) => {
   try {
-    const carId = parseInt(req.params.carId, 10);
-    db.prepare('DELETE FROM favorites WHERE user_id = ? AND car_id = ?').run(
-      req.user.id,
-      carId
-    );
+    if (!isValidObjectId(req.params.carId)) {
+      return res.status(400).json({ success: false, message: 'Invalid car id.' });
+    }
+
+    await Favorite.deleteOne({ userId: req.user.id, carId: req.params.carId });
     res.json({ success: true, message: 'Removed from favorites.' });
   } catch (err) {
     console.error('Remove favorite error:', err);

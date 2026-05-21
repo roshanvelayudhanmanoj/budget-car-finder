@@ -1,6 +1,6 @@
 /**
  * Budget Car Finder - Express server
- * Serves frontend + REST API + SQLite database
+ * Frontend + REST API + MongoDB Atlas
  *
  * Run: npm install && npm start
  * Open: http://localhost:3000
@@ -9,7 +9,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const { initDatabase } = require('./database/db');
+const { connectDatabase } = require('./database/mongodb');
+const { seedDatabase } = require('./database/seedMongo');
 
 const authRoutes = require('./routes/auth');
 const carsRoutes = require('./routes/cars');
@@ -18,9 +19,6 @@ const contactRoutes = require('./routes/contact');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// Initialize SQLite tables and seed data
-initDatabase();
 
 // Middleware
 app.use(cors());
@@ -35,24 +33,40 @@ app.use('/api/contact', contactRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ success: true, message: 'Budget Car Finder API is running.' });
+  res.json({
+    success: true,
+    message: 'Budget Car Finder API is running.',
+    database: 'MongoDB Atlas'
+  });
 });
 
-// Serve frontend files (HTML, CSS, JS)
+// Serve frontend files
 app.use(express.static(path.join(__dirname)));
 
-// SPA fallback - send index for unknown routes except API
 app.get('*', (req, res, next) => {
   if (req.path.startsWith('/api')) return next();
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log('');
-  console.log('  Budget Car Finder Server');
-  console.log('  ------------------------');
-  console.log('  Website:  http://localhost:' + PORT);
-  console.log('  API:      http://localhost:' + PORT + '/api/health');
-  console.log('  Database: database/bcf.db (SQLite)');
-  console.log('');
-});
+// Connect to MongoDB, seed data, then start server
+async function startServer() {
+  try {
+    await connectDatabase();
+    await seedDatabase();
+
+    app.listen(PORT, () => {
+      console.log('');
+      console.log('  Budget Car Finder Server');
+      console.log('  ------------------------');
+      console.log('  Website:  http://localhost:' + PORT);
+      console.log('  API:      http://localhost:' + PORT + '/api/health');
+      console.log('  Database: MongoDB Atlas (budget_car_finder)');
+      console.log('');
+    });
+  } catch (err) {
+    console.error('Failed to start server:', err.message);
+    process.exit(1);
+  }
+}
+
+startServer();
